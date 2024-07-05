@@ -16,6 +16,6 @@ jobs:
       # Authenticate with Firebase
       - uses: w9jds/firebase-action@master
         with:
-          args: deploy --project deployDemo
+          args: deploy --project deploydemo-66c38
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
