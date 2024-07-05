@@ -14,8 +14,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+
+      # Set up Firebase CLI
+      - uses: w9jds/firebase-action@master
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
-          projectId: deploydemo-66c38
+          args: tools
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
+
+      # Deploy to Firebase Hosting and Functions with preview channel
+      - id: deploy
+        run: firebase deploy --only hosting,functions --message "Deploy preview for PR"
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
+
+      # Extract preview URL
+      - id: extract-url
+        run: echo "::set-output name=preview-url::https://deploydemo-66c38.firebaseapp.com"
+      
+      # Post a comment with the preview URL
+      - name: Post preview URL
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: "Preview URL: ${{ steps.extract-url.outputs.preview-url }}"

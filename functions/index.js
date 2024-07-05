@@ -8,7 +8,7 @@ app.use('/api', createProxyMiddleware({
   target: 'http://18.212.119.213:8080',
   changeOrigin: true,
   pathRewrite: {
-    '^/api': '', // remove /api prefix when forwarding to the target
+    '^/api': '', 
   },
   secure: false
 }));

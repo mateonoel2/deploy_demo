@@ -12,9 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+
+      # Set up Firebase CLI
+      - uses: w9jds/firebase-action@master
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
-          channelId: live
-          projectId: deploydemo-66c38
+          args: tools
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
+
+      # Deploy to Firebase Hosting and Functions
+      - run: firebase deploy --only hosting,functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
