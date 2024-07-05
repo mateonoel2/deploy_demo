@@ -13,14 +13,9 @@ jobs:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
 
-      # Set up Firebase CLI
+      # Authenticate with Firebase
       - uses: w9jds/firebase-action@master
         with:
-          args: tools
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
-
-      # Deploy to Firebase Hosting and Functions
-      - run: firebase deploy --only hosting,functions
+          args: deploy --only hosting,functions
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
