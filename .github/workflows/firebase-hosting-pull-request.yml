@@ -14,20 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
-
-      # Authenticate with Firebase
-      - uses: w9jds/firebase-action@master
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          args: firebase deploy --only hosting,functions --project deploydemo-66c38
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
-        id: deploy
-
-      # Post a comment with the preview URL
-      - name: Post preview URL
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: "Preview URL: https://deploydemo-66c38.firebaseapp.com"
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEPLOYDEMO_66C38 }}
+          projectId: deploydemo-66c38
